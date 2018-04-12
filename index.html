@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
     <title>Amsterdam Museums</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <script type='text/javascript' src='bower_components/knockout/dist/knockout.js'></script>
 </head>
 <body>
 <h1>Amsterdam Museums</h1>
-<p>First name: <strong data-bind="text: firstName"></strong></p>
-<p>Last name: <strong data-bind="text: lastName"></strong></p>
-</body>
+<p>First name: <input data-bind="value: firstName"/></p>
+<p>Last name: <input data-bind="value: lastName"/></p>
+<p>Full name: <strong data-bind="text: fullName"></strong></p>
+<div id="map"></div>
 
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJZ1n6nLw41QY2uSF6vb1NOfsJskmY0cw&callback=initMap">
+</script>
 <script type="text/javascript" src="app.js"></script>
+</body>
 </html>
