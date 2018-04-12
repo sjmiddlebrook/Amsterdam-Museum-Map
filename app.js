@@ -17,6 +17,11 @@ var map;
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 52.3702, lng: 4.8952},
-        zoom: 8
+        zoom: 10
+    });
+    var centraal = {lat: 52.379189, lng: 4.899431};
+    var centraal_marker = new google.maps.Marker({
+        position: centraal,
+        map: map
     });
 }
