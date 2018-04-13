@@ -1,8 +1,28 @@
-#map {
-    height: 100%;
-}
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+}
+
+.container {
+    height: 100%;
+    position: relative;
+}
+
+#map {
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    position: absolute;
+    left: 352px;
+}
+
+.options-box {
+    background: #fff;
+    border: 1px solid #999;
+    border-radius: 3px;
+    height: 100%;
+    line-height: 35px;
+    padding-left: 10px;
+    width: 340px;
 }

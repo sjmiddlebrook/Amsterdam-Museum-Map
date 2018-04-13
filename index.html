@@ -8,12 +8,19 @@
     <script type='text/javascript' src='bower_components/knockout/dist/knockout.js'></script>
 </head>
 <body>
-<h1>Amsterdam Museums</h1>
-<p>First name: <input data-bind="value: firstName"/></p>
-<p>Last name: <input data-bind="value: lastName"/></p>
-<p>Full name: <strong data-bind="text: fullName"></strong></p>
-<div id="map"></div>
-
+<div class="container">
+    <div class="options-box">
+        <h1>Amsterdam Museums</h1>
+        <p>First name: <input data-bind="value: firstName"/></p>
+        <p>Last name: <input data-bind="value: lastName"/></p>
+        <p>Full name: <strong data-bind="text: fullName"></strong></p>
+        <div>
+            <input id="show-museums" type="button" value="Show Museums">
+            <input id="hide-museums" type="button" value="Hide Museums">
+        </div>
+    </div>
+    <div id="map"></div>
+</div>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJZ1n6nLw41QY2uSF6vb1NOfsJskmY0cw&callback=initMap">
 </script>
 <script type="text/javascript" src="app.js"></script>
