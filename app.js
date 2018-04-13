@@ -20,13 +20,8 @@ var markers = [];
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 52.3702, lng: 4.8952},
-        zoom: 10
+        zoom: 13
     });
-    // var rijksmuseum = {lat: 52.3600, lng: 4.8852};
-    // var rijksmuseum_marker = new google.maps.Marker({
-    //     position: rijksmuseum,
-    //     map: map
-    // });
 
     // list of amsterdam museums with coordinates
     var museums = [
@@ -42,7 +37,7 @@ function initMap() {
     ];
 
     var largeInfowindow = new google.maps.InfoWindow();
-    var bounds = new google.maps.LatLngBounds();
+
     // The following group uses the museum array to create an array of markers on initialize.
     for (var i = 0; i < museums.length; i++) {
         // Get the position from the location array.
@@ -50,7 +45,6 @@ function initMap() {
         var title = museums[i].title;
         // Create a marker per location, and put into markers array.
         var marker = new google.maps.Marker({
-            map: map,
             position: position,
             title: title,
             animation: google.maps.Animation.DROP,
@@ -62,10 +56,11 @@ function initMap() {
         marker.addListener('click', function() {
             populateInfoWindow(this, largeInfowindow);
         });
-        bounds.extend(markers[i].position);
+
     }
-    // Extend the boundaries of the map for each marker
-    map.fitBounds(bounds);
+
+    document.getElementById('show-museums').addEventListener('click', showMuseums);
+    document.getElementById('hide-museums').addEventListener('click', hideMuseums);
 
 }
 
@@ -82,5 +77,22 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.addListener('closeclick', function () {
             infowindow.setMarker = null;
         });
+    }
+}
+
+function showMuseums() {
+    var bounds = new google.maps.LatLngBounds();
+    // for each museum extend the boundaries and display marker
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(map);
+        bounds.extend(markers[i].position);
+    }
+    // Extend the boundaries of the map for each marker
+    map.fitBounds(bounds);
+}
+
+function hideMuseums() {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
     }
 }
