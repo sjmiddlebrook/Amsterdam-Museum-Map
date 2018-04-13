@@ -6,6 +6,8 @@ var markers = [];
 var museums = [];
 
 function AppViewModel() {
+    self = this;
+
     this.searchMuseum = ko.observable("");
 
     this.museums = ko.observableArray([
@@ -23,6 +25,16 @@ function AppViewModel() {
     // initialize the array of museums for markers
     museums = this.museums();
 
+    this.filteredMuseums = ko.computed(function() {
+        var filter = self.searchMuseum().toLowerCase();
+        if (!filter) {
+            return self.museums();
+        } else {
+            return ko.utils.arrayFilter(this.museums(), function(museum) {
+                return museum.title.toLowerCase().includes(filter);
+            });
+        }
+    }, this);
 
 }
 
@@ -77,7 +89,6 @@ function initMap() {
 
     document.getElementById('show-museums').addEventListener('click', showMuseums);
     document.getElementById('hide-museums').addEventListener('click', hideMuseums);
-    document.getElementById('search-museums').addEventListener('click', searchMuseums)
 }
 
 // This function populates the infowindow when the marker is clicked. We'll only allow
@@ -111,10 +122,6 @@ function hideMuseums() {
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
     }
-}
-
-function searchMuseums() {
-    console.log("searching for...");
 }
 
 function makeMarkerIcon(markerColor) {

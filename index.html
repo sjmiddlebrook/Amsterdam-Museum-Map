@@ -12,14 +12,13 @@
     <div class="options-box">
         <h1>Amsterdam Museums</h1>
         <div>
-            <p>Search Museum: <input data-bind="value: searchMuseum"/></p>
-            <input id="search-museums" type="button" value="Search">
+            <p>Filter Museum: <input data-bind="value: searchMuseum"/></p>
         </div>
         <div>
             <input id="show-museums" type="button" value="Show Museums">
             <input id="hide-museums" type="button" value="Hide Museums">
         </div>
-        <ul data-bind="foreach: museums">
+        <ul data-bind="foreach: filteredMuseums">
             <li data-bind="text: title"></li>
         </ul>
     </div>
