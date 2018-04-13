@@ -1,36 +1,38 @@
-// variable for google maps api to display map of Amsterdam
+// to store google maps api
 var map;
-// Create a new blank array for all the listing markers.
-var markers = [];
 // List of museums
-var museums = [];
+var museums = [
+    {title: 'Rijksmuseum', location: {lat: 52.3600, lng: 4.8852}},
+    {title: 'Van Gogh Museum', location: {lat: 52.3584, lng: 4.8811}},
+    {title: 'Joods Historisch Museum', location: {lat: 52.3671, lng: 4.9038}},
+    {title: 'Fotografiemuseum Amsterdam', location: {lat: 52.3641, lng: 4.8933}},
+    {title: 'Stedelijk Museum', location: {lat: 52.3580, lng: 4.8798}},
+    {title: 'Hermitage Museum', location: {lat: 52.3653, lng: 4.9024}},
+    {title: 'Museum het Rembrandthuis', location: {lat: 52.3694, lng: 4.9012}},
+    {title: 'Allard Pierson Museum', location: {lat: 52.3687, lng: 4.8930}},
+    {title: 'Tropenmuseum', location: {lat: 52.3627, lng: 4.9223}}
+];
 
 function AppViewModel() {
     self = this;
 
     this.searchMuseum = ko.observable("");
 
-    this.museums = ko.observableArray([
-        {title: 'Rijksmuseum', location: {lat: 52.3600, lng: 4.8852}},
-        {title: 'Van Gogh Museum', location: {lat: 52.3584, lng: 4.8811}},
-        {title: 'Joods Historisch Museum', location: {lat: 52.3671, lng: 4.9038}},
-        {title: 'Fotografiemuseum Amsterdam', location: {lat: 52.3641, lng: 4.8933}},
-        {title: 'Stedelijk Museum', location: {lat: 52.3580, lng: 4.8798}},
-        {title: 'Hermitage Museum', location: {lat: 52.3653, lng: 4.9024}},
-        {title: 'Museum het Rembrandthuis', location: {lat: 52.3694, lng: 4.9012}},
-        {title: 'Allard Pierson Museum', location: {lat: 52.3687, lng: 4.8930}},
-        {title: 'Tropenmuseum', location: {lat: 52.3627, lng: 4.9223}}
-    ]);
-
-    // initialize the array of museums for markers
-    museums = this.museums();
-
-    this.filteredMuseums = ko.computed(function() {
+    this.museumList = ko.computed(function () {
         var filter = self.searchMuseum().toLowerCase();
         if (!filter) {
-            return self.museums();
+            for (var i = 0; i < museums.length; i++) {
+                if (map) {
+                    museums[i].marker.setVisible(true);
+                }
+            }
+            return museums;
         } else {
-            return ko.utils.arrayFilter(this.museums(), function(museum) {
+            return ko.utils.arrayFilter(museums, function (museum) {
+                if (!museum.title.toLowerCase().includes(filter)) {
+                    // hide the marker if museum not in search
+                    museum.marker.setVisible(false);
+                }
                 return museum.title.toLowerCase().includes(filter);
             });
         }
@@ -39,41 +41,47 @@ function AppViewModel() {
 }
 
 // Activates knockout.js
-ko.applyBindings(new AppViewModel());
+var viewModel = new AppViewModel();
+ko.applyBindings(viewModel);
 
 function initMap() {
+    // use google maps api to display map of Amsterdam
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 52.3702, lng: 4.8952},
         zoom: 13
     });
 
-    // for updating the info window
+    // for updating the info window of locations
     var largeInfowindow = new google.maps.InfoWindow();
     // Marker icon for museums
     var defaultIcon = makeMarkerIcon('0091ff');
     var highlightedIcon = makeMarkerIcon('ffff24');
-
+    // bounds for map
+    var bounds = new google.maps.LatLngBounds();
     // create markers for each location
     for (var i = 0; i < museums.length; i++) {
         // Get the position from the location array.
         var position = museums[i].location;
         var title = museums[i].title;
-        // Create a marker per location, and put into markers array.
+        // Create a marker for each museum
         var marker = new google.maps.Marker({
             position: position,
             title: title,
             icon: defaultIcon,
+            map: map,
             animation: google.maps.Animation.DROP,
             id: i
         });
-        // Push the marker to our array of markers.
-        markers.push(marker);
+        // add the marker to the museum array
+        museums[i].marker = marker;
+        // fit the bounds of the map to the markers
+        bounds.extend(museums[i].marker.position);
+
         // Create an onclick event to open an infowindow at each marker.
-        marker.addListener('click', function() {
-            // populateInfoWindow(this, largeInfowindow);
-            for (var i = 0; i < markers.length; i++) {
-                if (this.id !== markers[i].id) {
-                    markers[i].setIcon(defaultIcon);
+        marker.addListener('click', function () {
+            for (var i = 0; i < museums.length; i++) {
+                if (this.id !== museums[i].marker.id) {
+                    museums[i].marker.setIcon(defaultIcon);
                 }
             }
             if (this.getIcon().url === defaultIcon.url) {
@@ -86,14 +94,10 @@ function initMap() {
             }
         });
     }
-
-    document.getElementById('show-museums').addEventListener('click', showMuseums);
-    document.getElementById('hide-museums').addEventListener('click', hideMuseums);
+    // Extend the boundaries of the map for each marker
+    map.fitBounds(bounds);
 }
 
-// This function populates the infowindow when the marker is clicked. We'll only allow
-// one infowindow which will open at the marker that is clicked, and populate based
-// on that markers position.
 function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
@@ -107,30 +111,14 @@ function populateInfoWindow(marker, infowindow) {
     }
 }
 
-function showMuseums() {
-    var bounds = new google.maps.LatLngBounds();
-    // for each museum extend the boundaries and display marker
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(map);
-        bounds.extend(markers[i].position);
-    }
-    // Extend the boundaries of the map for each marker
-    map.fitBounds(bounds);
-}
-
-function hideMuseums() {
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(null);
-    }
-}
 
 function makeMarkerIcon(markerColor) {
     var markerImage = new google.maps.MarkerImage(
-        'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+        'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
         '|40|_|%E2%80%A2',
         new google.maps.Size(21, 34),
         new google.maps.Point(0, 0),
         new google.maps.Point(10, 34),
-        new google.maps.Size(21,34));
+        new google.maps.Size(21, 34));
     return markerImage;
 }

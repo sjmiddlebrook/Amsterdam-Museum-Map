@@ -13,12 +13,9 @@
         <h1>Amsterdam Museums</h1>
         <div>
             <p>Filter Museum: <input data-bind="value: searchMuseum"/></p>
+            <input id="filter-museums" type="button" value="Search Museums">
         </div>
-        <div>
-            <input id="show-museums" type="button" value="Show Museums">
-            <input id="hide-museums" type="button" value="Hide Museums">
-        </div>
-        <ul data-bind="foreach: filteredMuseums">
+        <ul data-bind="foreach: museumList">
             <li data-bind="text: title"></li>
         </ul>
     </div>
