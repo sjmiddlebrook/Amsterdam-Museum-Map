@@ -1,5 +1,6 @@
 // to store google maps api
 var map;
+
 // List of museums
 var museums = [
     {title: 'Rijksmuseum', location: {lat: 52.3600, lng: 4.8852}},
@@ -38,6 +39,10 @@ function AppViewModel() {
         }
     }, this);
 
+    this.museumClick = function() {
+        console.log(this);
+    }
+
 }
 
 // Activates knockout.js
@@ -48,7 +53,100 @@ function initMap() {
     // use google maps api to display map of Amsterdam
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 52.3702, lng: 4.8952},
-        zoom: 13
+        zoom: 13,
+        styles: [
+            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+            {
+                featureType: 'administrative.locality',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#d59563'}]
+            },
+            {
+                featureType: 'poi',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#d59563'}]
+            },
+            {
+                featureType: 'poi.park',
+                elementType: 'geometry',
+                stylers: [{color: '#263c3f'}]
+            },
+            {
+                featureType: 'poi.park',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#6b9a76'}]
+            },
+            {
+                featureType: 'road',
+                elementType: 'geometry',
+                stylers: [{color: '#38414e'}]
+            },
+            {
+                featureType: 'road',
+                elementType: 'geometry.stroke',
+                stylers: [{color: '#212a37'}]
+            },
+            {
+                featureType: 'road',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#9ca5b3'}]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'geometry',
+                stylers: [{color: '#746855'}]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'geometry.stroke',
+                stylers: [{color: '#1f2835'}]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#f3d19c'}]
+            },
+            {
+                featureType: 'transit',
+                elementType: 'geometry',
+                stylers: [{color: '#2f3948'}]
+            },
+            {
+                featureType: 'transit.station',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#d59563'}]
+            },
+            {
+                featureType: 'water',
+                elementType: 'geometry',
+                stylers: [{color: '#17263c'}]
+            },
+            {
+                featureType: 'water',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#515c6d'}]
+            },
+            {
+                featureType: 'water',
+                elementType: 'labels.text.stroke',
+                stylers: [{color: '#17263c'}]
+            },
+            {
+                featureType: "poi",
+                stylers: [
+                    { visibility: "off" }
+                ]
+            },
+            {
+                featureType: "road",
+                elementType: "labels",
+                stylers: [
+                    { visibility: "off" }
+                ]
+            }
+        ]
     });
 
     // for updating the info window of locations

@@ -16,7 +16,7 @@
             <input id="filter-museums" type="button" value="Search Museums">
         </div>
         <ul data-bind="foreach: museumList">
-            <li data-bind="text: title"></li>
+            <li data-bind="text: title, click: $parent.museumClick"></li>
         </ul>
     </div>
     <div id="map"></div>
