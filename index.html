@@ -18,6 +18,9 @@
             <input id="show-museums" type="button" value="Show Museums">
             <input id="hide-museums" type="button" value="Hide Museums">
         </div>
+        <ul data-bind="foreach: museums">
+            <li data-bind="text: title"></li>
+        </ul>
     </div>
     <div id="map"></div>
 </div>
