@@ -210,10 +210,11 @@ function populateInfoWindow(marker, infowindow, defaultIcon) {
     if (infowindow.marker != marker) {
         infowindow.marker = marker;
         var info_content = '<h1>' + marker.title + '</h1>';
-        info_content += '<div>' + museums[marker.id].wiki_summary + '</div>';
+        info_content += '<p>' + museums[marker.id].wiki_summary;
         if (museums[marker.id].wiki_link) {
-            info_content += '<p><a href="' + museums[marker.id].wiki_link + '" target="_blank">Wikipedia</p>';
+            info_content += '  <a href="' + museums[marker.id].wiki_link + '" target="_blank">Wikipedia</a>';
         }
+        info_content += '</p>';
         infowindow.setContent(info_content);
         infowindow.open(map, marker);
         // Make sure the marker property is cleared if the infowindow is closed.
