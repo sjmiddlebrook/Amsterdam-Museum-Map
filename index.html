@@ -12,8 +12,7 @@
     <div class="options-box">
         <h1>Amsterdam Museums</h1>
         <div>
-            <p>Filter Museum: <input data-bind="value: searchMuseum"/></p>
-            <input id="filter-museums" type="button" value="Search Museums">
+            <input type="text" data-bind="textInput: searchMuseum" placeholder="Search Museum"/>
         </div>
         <ul data-bind="foreach: museumList">
             <li data-bind="text: title, click: $parent.museumClick"></li>
@@ -22,7 +21,7 @@
     <div id="map"></div>
 </div>
 <script type='text/javascript' src='bower_components/knockout/dist/knockout.js'></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJZ1n6nLw41QY2uSF6vb1NOfsJskmY0cw&callback=initMap">
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJZ1n6nLw41QY2uSF6vb1NOfsJskmY0cw&callback=initMap" onerror="mapsError()">
 </script>
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="app.js"></script>

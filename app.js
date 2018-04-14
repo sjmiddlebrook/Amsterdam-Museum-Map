@@ -34,6 +34,8 @@ function AppViewModel() {
                 if (!museum.title.toLowerCase().includes(filter)) {
                     // hide the marker if museum not in search
                     museum.marker.setVisible(false);
+                } else {
+                    museum.marker.setVisible(true);
                 }
                 return museum.title.toLowerCase().includes(filter);
             });
@@ -237,7 +239,7 @@ function makeMarkerIcon(markerColor) {
 function getWikiData(museum, wiki_url) {
 
     var wikiRequestTimeout = setTimeout(function(){
-        museum.wiki_summary = "failed to get Wikipedia data. Try again later.";
+        museum.wiki_summary = "Failed to get Wikipedia data. Try again later.";
         museum.wiki_link = null;
     }, 1000);
 
@@ -252,4 +254,8 @@ function getWikiData(museum, wiki_url) {
             clearTimeout(wikiRequestTimeout);
         }
     } );
+}
+
+function mapsError() {
+    alert("Failed to load maps. Try again later.");
 }
