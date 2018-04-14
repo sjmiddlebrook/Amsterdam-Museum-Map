@@ -41,9 +41,8 @@ function AppViewModel() {
     }, this);
 
     this.museumClick = function() {
-        console.log(this);
+        google.maps.event.trigger(this.marker, 'click');
     }
-
 }
 
 // Activates knockout.js
@@ -192,7 +191,7 @@ function initMap() {
             }
             if (this.getIcon().url === defaultIcon.url) {
                 this.setIcon(highlightedIcon);
-                populateInfoWindow(this, largeInfowindow);
+                populateInfoWindow(this, largeInfowindow, defaultIcon);
             } else {
                 this.setIcon(defaultIcon);
                 largeInfowindow.marker = null;
@@ -204,19 +203,19 @@ function initMap() {
     map.fitBounds(bounds);
 }
 
-function populateInfoWindow(marker, infowindow) {
+function populateInfoWindow(marker, infowindow, defaultIcon) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
         infowindow.marker = marker;
         var info_content = '<h1>' + marker.title + '</h1>';
         info_content += '<div>' + museums[marker.id].wiki_summary + '</div>';
-        console.log(museums[marker.id].wiki_link);
         info_content += '<p><a href="' + museums[marker.id].wiki_link + '" target="_blank">Wikipedia</p>';
         infowindow.setContent(info_content);
         infowindow.open(map, marker);
         // Make sure the marker property is cleared if the infowindow is closed.
         infowindow.addListener('closeclick', function () {
             infowindow.setMarker = null;
+            marker.setIcon(defaultIcon);
         });
     }
 }
