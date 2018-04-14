@@ -209,7 +209,9 @@ function populateInfoWindow(marker, infowindow, defaultIcon) {
         infowindow.marker = marker;
         var info_content = '<h1>' + marker.title + '</h1>';
         info_content += '<div>' + museums[marker.id].wiki_summary + '</div>';
-        info_content += '<p><a href="' + museums[marker.id].wiki_link + '" target="_blank">Wikipedia</p>';
+        if (museums[marker.id].wiki_link) {
+            info_content += '<p><a href="' + museums[marker.id].wiki_link + '" target="_blank">Wikipedia</p>';
+        }
         infowindow.setContent(info_content);
         infowindow.open(map, marker);
         // Make sure the marker property is cleared if the infowindow is closed.
@@ -233,6 +235,12 @@ function makeMarkerIcon(markerColor) {
 }
 
 function getWikiData(museum, wiki_url) {
+
+    var wikiRequestTimeout = setTimeout(function(){
+        museum.wiki_summary = "failed to get Wikipedia data. Try again later.";
+        museum.wiki_link = null;
+    }, 1000);
+
     $.ajax( {
         url: wiki_url,
         dataType: 'jsonp',
@@ -241,6 +249,7 @@ function getWikiData(museum, wiki_url) {
             var wiki_link = data[3][0];
             museum.wiki_summary = wiki_summary;
             museum.wiki_link = wiki_link;
+            clearTimeout(wikiRequestTimeout);
         }
     } );
 }
