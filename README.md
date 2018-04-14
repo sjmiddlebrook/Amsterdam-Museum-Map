@@ -10,5 +10,7 @@ The project uses:
 
 ## Setup
 save contents of repository
+
 install knockoutjs
+
 open index.html in any browser
