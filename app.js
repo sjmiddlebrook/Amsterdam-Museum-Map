@@ -6,13 +6,14 @@ var museums = [
     {title: 'Rijksmuseum', location: {lat: 52.3600, lng: 4.8852}},
     {title: 'Van Gogh Museum', location: {lat: 52.3584, lng: 4.8811}},
     {title: 'Joods Historisch Museum', location: {lat: 52.3671, lng: 4.9038}},
-    {title: 'Fotografiemuseum Amsterdam', location: {lat: 52.3641, lng: 4.8933}},
+    {title: 'FOAM Fotografiemuseum Amsterdam', location: {lat: 52.3641, lng: 4.8933}},
     {title: 'Stedelijk Museum', location: {lat: 52.3580, lng: 4.8798}},
     {title: 'Hermitage Museum', location: {lat: 52.3653, lng: 4.9024}},
-    {title: 'Museum het Rembrandthuis', location: {lat: 52.3694, lng: 4.9012}},
+    {title: 'Rembrandt House Museum', location: {lat: 52.3694, lng: 4.9012}},
     {title: 'Allard Pierson Museum', location: {lat: 52.3687, lng: 4.8930}},
     {title: 'Tropenmuseum', location: {lat: 52.3627, lng: 4.9223}}
 ];
+
 
 function AppViewModel() {
     self = this;
@@ -161,6 +162,12 @@ function initMap() {
         // Get the position from the location array.
         var position = museums[i].location;
         var title = museums[i].title;
+        // museum title for wiki query
+        var museum_title = title.split(" ").join("+");
+        // retrieves wikipedia info
+        var wiki_url = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + museum_title + "&format=json&callback=wikiCallback";
+        // use wikipedia api to get summary and link to wiki article
+        getWikiData(museums[i], wiki_url);
         // Create a marker for each museum
         var marker = new google.maps.Marker({
             position: position,
@@ -172,6 +179,7 @@ function initMap() {
         });
         // add the marker to the museum array
         museums[i].marker = marker;
+
         // fit the bounds of the map to the markers
         bounds.extend(museums[i].marker.position);
 
@@ -200,7 +208,11 @@ function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
         infowindow.marker = marker;
-        infowindow.setContent('<div>' + marker.title + '</div>');
+        var info_content = '<h1>' + marker.title + '</h1>';
+        info_content += '<div>' + museums[marker.id].wiki_summary + '</div>';
+        console.log(museums[marker.id].wiki_link);
+        info_content += '<p><a href="' + museums[marker.id].wiki_link + '" target="_blank">Wikipedia</p>';
+        infowindow.setContent(info_content);
         infowindow.open(map, marker);
         // Make sure the marker property is cleared if the infowindow is closed.
         infowindow.addListener('closeclick', function () {
@@ -219,4 +231,17 @@ function makeMarkerIcon(markerColor) {
         new google.maps.Point(10, 34),
         new google.maps.Size(21, 34));
     return markerImage;
+}
+
+function getWikiData(museum, wiki_url) {
+    $.ajax( {
+        url: wiki_url,
+        dataType: 'jsonp',
+        success: function(data) {
+            var wiki_summary = data[2][0];
+            var wiki_link = data[3][0];
+            museum.wiki_summary = wiki_summary;
+            museum.wiki_link = wiki_link;
+        }
+    } );
 }
